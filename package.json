@@ -4,7 +4,8 @@
   "description": "In this assignment, you'll create a web app that lets users view and leave comments on the latest news. But you're not going to actually write any articles; instead, you'll flex your Mongoose and Cheerio muscles to scrape news from another site.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.0",
     "express-handlebars": "^3.1.0",
-    "mongoose": "^5.5.9"
+    "mongoose": "^5.5.9",
+    "morgan": "^1.9.1"
   }
 }
