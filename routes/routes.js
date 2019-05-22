@@ -12,19 +12,12 @@ var db = require("../models");
 // Routes
 
 // "/" route for homepage
-router.get("/", (req, res) => {
+router.get("/", function (req, res) {
     res.render("index");
 });
 
 // scrape route to collect data from MLB.com
-router.get("/scrape", function (req, res) {
-    var scrapedData = scrape();
-    console.log(scrapedData);
-    res.json(scrapedData);
-});
-
-// scraper function
-function scrape() {
+router.get("/api/scrape", function (req, res) {
     axios.get("https://www.mlb.com")
         .then(function (response) {
 
@@ -45,18 +38,23 @@ function scrape() {
                     .then(function (dbArticle) {
                         // View the added result in the console
                         console.log("Article inserted");
-                        return dbArticle;
+                        console.log(dbArticle);
                     })
                     .catch(function (err) {
                         // If an error occurred, log it
                         console.log(err);
                     });
             });
+        })
+        .catch(function (err) {
+            // If an error occurred, log it
+            console.log(err);
         });
-}
+});
+
 
 // delete articles in collection
-router.get("/clear", function (req, res) {
+router.get("/api/clear", function (req, res) {
     db.Article.deleteMany({})
         .then(function (dbArticle) {
             // View the added result in the console
@@ -70,26 +68,21 @@ router.get("/clear", function (req, res) {
         });
 });
 
-
+// Route for getting all Articles from the db
+router.get("/api/articles", function (req, res) {
+    db.Article.find({})
+        .then(function (dbArticle) {
+            // If we were able to successfully find Articles, send them back to the client
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+});
 
 
 /*
-
-
-// Route for getting all Articles from the db
-app.get("/articles", function(req, res) {
-  // Grab every document in the Articles collection
-  db.Article.find({})
-    .then(function(dbArticle) {
-      // If we were able to successfully find Articles, send them back to the client
-      res.json(dbArticle);
-    })
-    .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});
-
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
