@@ -27,24 +27,25 @@ const API = {
     }
 };
 
-
+// function that scrapes site, then calls displayScrapped
 const scrapeSite = function (event) {
     event.preventDefault();
     console.log("scraper button pressed");
 
-    API.scrapeDB().then(
-        API.getArticles()
-            .then(function (result) {
-                // console.log(result);
-                displayScraped(result);
-            }));
+
+    // something going on here that it won't refresh the articles ...
+    API.scrapeDB()
+        .then(API.getArticles())
+        .then(function (result) {
+            // console.log(result);
+            displayScraped(result);
+        });
 };
 
+// renders articles on page from scraped DB
 const displayScraped = function (result) {
     console.log("rendering articles");
     console.log(result);
-    
-    
 
     // build list of articles
     let $articles = result.map(function (article) {
@@ -52,17 +53,17 @@ const displayScraped = function (result) {
             .addClass("article")
             .attr("data-id", article._id);
         let $title = $("<h6>")
-            .text(article.title);
+            .text(article.title + "   ");
         let $link = $("<a>")
             .text("Read story")
             .attr("href", article.link)
             .attr("target", "_blank");
-
+        $title.append($link);
         $p
             .append($title)
-            .append($link)
+            // .append($link)
             .append("<hr>");
-        
+
         return $p;
     });
 
@@ -72,6 +73,25 @@ const displayScraped = function (result) {
 };
 
 
+const clearScraped = function (event) {
+    event.preventDefault();
+    API.clearDB()
+        .then(function (result) {
+            console.log(result);
+            $scrapeResults.empty();
+        });
+};
+
 // Add event listeners to buttons
 $scrapeBtn.on("click", scrapeSite);
-//$clearBtn.on("click", clearScraped);
+$clearBtn.on("click", clearScraped);
+
+// on load
+$(document).ready(
+    API.getArticles()
+        .then(function (result) {
+            console.log("document ready, loading articles");
+            // console.log(result);
+            displayScraped(result);
+        })
+);
