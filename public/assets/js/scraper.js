@@ -44,9 +44,9 @@ const scrapeSite = function (event) {
 
     // something going on here that it won't refresh the articles ...
     return API.scrapeDB()
-    
+
         // wait 500ms to let articles store in db
-        .then(delayPromise(500))
+        .then(delayPromise(1000))
         .then(function (result) {
             return API.getArticles()
                 .then(function (result) {

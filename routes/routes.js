@@ -85,6 +85,10 @@ router.get("/api/articles", function (req, res) {
         });
 });
 
+// route to saved articles page
+router.get("/saved", function (req, res) {
+    res.render("saved");
+});
 
 /*
 // Route for grabbing a specific Article by id, populate it with it's note

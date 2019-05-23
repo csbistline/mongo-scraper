@@ -27,6 +27,25 @@
                     </form>
             </div>
         </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="assets/img/mlb-logo.png" height="30" class="d-inline-block align-top" alt="MLB">
+            News Scraper</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/">Home </a>
+                <a class="nav-item nav-link active" href="/saved">Saved Articles <span class="sr-only">(current)</span></a>
+                <form class="form-inline">
+                    <button class="btn btn-sm btn-outline-danger" id="clear-btn" type="button">Delete Saved Stories</button>
+                </form>
+            </div>
+        </div>
+    </nav>
     <div class="row mb-0">
         <div class="col-md text-center">
             <img src="assets/img/bat-ball2.png" class="img-fluid mt-2 mb-0">
@@ -37,18 +56,18 @@
             <h1 class="text-center">MLB News Scraper</h1>
         </div>
     </div>
-    <div class="row">
+        <div class="row">
         <div class="col-10 offset-1">
-            <h3>Articles in database</h3>
+            <h3>Saved articles</h3>
         </div>
     </div>
     <div class="row">
-        <div class="col-10 offset-1" id="scrape-results">
+        <div class="col-10 offset-1" id="saved-results">
 
         </div>
     </div>
 
 </div>
 
-<!-- My Custom JS -->
-<script src="/assets/js/scraper.js"></script>
+    <!-- My Custom JS -->
+    <script src="/assets/js/saved.js"></script>
