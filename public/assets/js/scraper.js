@@ -3,7 +3,7 @@ var $scrapeResults = $("#scrape-results");
 var $scrapeBtn = $("#scrape-btn");
 var $clearBtn = $("#clear-btn");
 
-// delay promise
+// delay promise workaround for displaying results
 const delayPromise = function (duration) {
     return function () {
         return new Promise(function (resolve, reject) {
@@ -41,18 +41,15 @@ const API = {
 // function that scrapes site, then calls displayScrapped
 const scrapeSite = function (event) {
     event.preventDefault();
-    console.log("scraper button pressed");
-
 
     // something going on here that it won't refresh the articles ...
     return API.scrapeDB()
+    
+        // wait 500ms to let articles store in db
         .then(delayPromise(500))
         .then(function (result) {
-            console.log("first time logging result", result);
             return API.getArticles()
                 .then(function (result) {
-                    console.log("second time logging result", result);
-
                     if (result.length) {
                         displayScraped(result);
                     }
