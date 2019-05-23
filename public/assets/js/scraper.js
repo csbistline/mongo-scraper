@@ -76,7 +76,6 @@ const displayScraped = function (result) {
         $title.append($link);
         $p
             .append($title)
-            // .append($link)
             .append("<hr>");
 
         return $p;
