@@ -35,6 +35,13 @@ const API = {
             url: "/api/articles",
             type: "GET"
         });
+    },
+
+    getOneArticle: function (id) {
+        return $.ajax({
+            url: "/api/articles/" + id,
+            type: "GET"
+        });
     }
 };
 
@@ -65,15 +72,25 @@ const displayScraped = function (result) {
     // build list of articles
     let $articles = result.map(function (article) {
         let $p = $("<p>")
-            .addClass("article")
-            .attr("data-id", article._id);
-        let $title = $("<h6>")
-            .text(article.title + "   ");
+            .addClass("article");
+        let $title = $("<div>")
+            .text(article.title + "   ")
+            .addClass("font-weight-normal");
+        let $span = $("<span>")
+            .addClass("align-right");
         let $link = $("<a>")
             .text("Read story")
+            .addClass("badge badge-secondary mr-2 float-right")
             .attr("href", article.link)
             .attr("target", "_blank");
-        $title.append($link);
+        let $btn = $("<a>")
+            .text("Save story")
+            .addClass("badge badge-primary save-btn float-right")
+            .attr("href", "#")
+            .attr("data-id", article._id);
+        $span.append($btn).append($link);
+        $title.append($span);
+
         $p
             .append($title)
             .append("<hr>");
@@ -99,6 +116,7 @@ const clearScraped = function (event) {
 // Add event listeners to buttons
 $scrapeBtn.on("click", scrapeSite);
 $clearBtn.on("click", clearScraped);
+$(document).on("click", ".save-btn", saveStory);
 
 // on load
 $(document).ready(
