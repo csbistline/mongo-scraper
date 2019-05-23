@@ -30,15 +30,18 @@ router.get("/api/scrape", function (req, res) {
                 var title = $(element).text();
                 var link = $(element).attr("href");
 
-                // Save these results in an object that we'll push into the results array we defined earlier
-                db.Article.create({
-                    title: title,
-                    link: link
-                })
-                    .then(function (dbArticle) {
+
+                db.Article.update({ "title": title }, //Find with the unique identifier
+                    {
+                        title: title,
+                        link: link
+                    },
+                    { upsert: true }
+                )
+                    .then(function (result) {
                         // View the added result in the console
-                        console.log("Article inserted");
-                        console.log(dbArticle);
+                        console.log("Checking if exists");
+                        console.log(result.nModified);
                     })
                     .catch(function (err) {
                         // If an error occurred, log it
@@ -50,6 +53,7 @@ router.get("/api/scrape", function (req, res) {
             // If an error occurred, log it
             console.log(err);
         });
+    res.send("Scrape Complete");
 });
 
 

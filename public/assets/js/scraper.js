@@ -3,6 +3,17 @@ var $scrapeResults = $("#scrape-results");
 var $scrapeBtn = $("#scrape-btn");
 var $clearBtn = $("#clear-btn");
 
+// delay promise
+const delayPromise = function (duration) {
+    return function () {
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                resolve();
+            }, duration);
+        });
+    };
+};
+
 // The API object contains methods for each kind of request we'll make
 const API = {
     scrapeDB: function () {
@@ -34,11 +45,18 @@ const scrapeSite = function (event) {
 
 
     // something going on here that it won't refresh the articles ...
-    API.scrapeDB()
-        .then(API.getArticles())
+    return API.scrapeDB()
+        .then(delayPromise(500))
         .then(function (result) {
-            // console.log(result);
-            displayScraped(result);
+            console.log("first time logging result", result);
+            return API.getArticles()
+                .then(function (result) {
+                    console.log("second time logging result", result);
+
+                    if (result.length) {
+                        displayScraped(result);
+                    }
+                });
         });
 };
 
