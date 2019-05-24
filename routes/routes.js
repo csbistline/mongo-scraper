@@ -136,6 +136,7 @@ router.get("/api/articles", function (req, res) {
 // API Routes (saved)
 // ==========================
 
+// get all saved articles in collection
 router.get("/api/saved/", function (req, res) {
     db.SavedArticle.find({})
         .then(function (dbArticle) {
@@ -148,8 +149,35 @@ router.get("/api/saved/", function (req, res) {
         });
 });
 
+// delete all saved articles in collection
+router.get("/api/saved/clear", function (req, res) {
+    db.SavedArticle.deleteMany({})
+        .then(function (dbArticle) {
+            // View the added result in the console
+            console.log(dbArticle);
+            console.log("documents deleted");
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, log it
+            console.log(err);
+        });
+});
 
+router.delete("/api/saved/clear/:id", function (req, res) {
 
+    db.SavedArticle.deleteOne({ _id: req.params.id})
+        .then(function (dbArticle) {
+            // View the added result in the console
+            console.log(dbArticle);
+            console.log("Article deleted");
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, log it
+            console.log(err);
+        });
+});
 
 /*
 // Route for grabbing a specific Article by id, populate it with it's note

@@ -17,7 +17,7 @@ const delayPromise = function (duration) {
 const API = {
     clearSavedDB: function () {
         return $.ajax({
-            url: "api/saved/clear",
+            url: "/api/saved/clear",
             type: "GET"
         });
     },
@@ -33,6 +33,13 @@ const API = {
         return $.ajax({
             url: "/api/saved/" + id,
             type: "GET"
+        });
+    },
+
+    deleteOneSavedArticle: function (id) {
+        return $.ajax({
+            url: "/api/saved/clear/" + id,
+            type: "DELETE"
         });
     }
 };
@@ -66,7 +73,9 @@ const displaySaved = function (result) {
             .text("Add note")
             .addClass("badge badge-secondary note-btn mr-2 float-right")
             .attr("href", "#")
-            .attr("data-id", article._id);
+            .attr("data-id", article._id)
+            .attr("data-toggle", "modal")
+            .attr("data-target", ".note-modal");
         $span.append($delete).append($read).append($note);
         $title.append($span);
 
@@ -92,16 +101,28 @@ const clearSaved = function (event) {
         });
 };
 
+const deleteSavedStory = function (event) {
+    event.preventDefault();
+    const id = $(this).attr("data-id");
+    API.deleteOneSavedArticle(id)
+        .then(function (result) {
+            console.log(result);
+            API.getSavedArticles()
+                .then(function (result) {
+                    displaySaved(result);
+                });
+        });
+};
+
 // Add event listeners to buttons
 $clearBtn.on("click", clearSaved);
-// $(document).on("click", ".save-btn", saveStory);
+$(document).on("click", ".delete-btn", deleteSavedStory);
 
 // on load
 $(document).ready(
     API.getSavedArticles()
         .then(function (result) {
             console.log("document ready, loading articles");
-            // console.log(result);
             displaySaved(result);
         })
 );

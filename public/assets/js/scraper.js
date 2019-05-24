@@ -87,7 +87,9 @@ const displayScraped = function (result) {
             .text("Save story")
             .addClass("badge badge-primary save-btn float-right")
             .attr("href", "#")
-            .attr("data-id", article._id);
+            .attr("data-id", article._id)
+            .attr("data-toggle", "modal")
+            .attr("data-target", ".saved-modal-sm");
         $span.append($btn).append($link);
         $title.append($span);
 
