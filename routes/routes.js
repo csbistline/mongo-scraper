@@ -1,4 +1,7 @@
+// ==========================
 // Router setup
+// ==========================
+
 var express = require("express");
 var router = express.Router();
 
@@ -9,9 +12,9 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("../models");
 
-
-
+// ==========================
 // HTML Routes
+// ==========================
 
 // "/" route for homepage
 router.get("/", function (req, res) {
@@ -24,8 +27,9 @@ router.get("/saved", function (req, res) {
 });
 
 
-
-// API Routes
+// ==========================
+// API Routes (scrape)
+// ==========================
 
 // scrape route to collect data from MLB.com
 router.get("/api/scrape", function (req, res) {
@@ -126,6 +130,26 @@ router.get("/api/articles", function (req, res) {
             res.json(err);
         });
 });
+
+
+// ==========================
+// API Routes (saved)
+// ==========================
+
+router.get("/api/saved/", function (req, res) {
+    db.SavedArticle.find({})
+        .then(function (dbArticle) {
+            // If we were able to successfully find Articles, send them back to the client
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+});
+
+
+
 
 /*
 // Route for grabbing a specific Article by id, populate it with it's note
