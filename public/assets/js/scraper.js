@@ -103,13 +103,24 @@ const displayScraped = function (result) {
     $scrapeResults.append($articles);
 };
 
-
+// delete all scraped articles from DB
 const clearScraped = function (event) {
     event.preventDefault();
     API.clearDB()
         .then(function (result) {
             console.log(result);
             $scrapeResults.empty();
+        });
+};
+
+// save story to savedarticles DB
+const saveStory = function (event) {
+    console.log($(this).attr("data-id"));
+    const id = $(this).attr("data-id");
+    // call API to get specified article from DB
+    API.getOneArticle(id)
+        .then(function (result) {
+            console.log(result);
         });
 };
 

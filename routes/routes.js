@@ -51,8 +51,7 @@ router.get("/api/scrape", function (req, res) {
                 )
                     .then(function (result) {
                         // View the added result in the console
-                        console.log("Checking if exists");
-                        console.log(result.nModified);
+                        console.log(result);
                     })
                     .catch(function (err) {
                         // If an error occurred, log it
@@ -66,7 +65,6 @@ router.get("/api/scrape", function (req, res) {
         });
     res.send("Scrape Complete");
 });
-
 
 // delete articles in collection
 router.get("/api/clear", function (req, res) {
@@ -83,30 +81,44 @@ router.get("/api/clear", function (req, res) {
         });
 });
 
+// Route for grabbing a specific Article by id
+router.get("/api/articles/:id", function (req, res) {
+
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    db.Article.findOne({ _id: req.params.id })
+        .then(function (dbArticle) {
+            console.log(dbArticle);
+            
+
+            // save article to SavedArticles collection
+            db.SavedArticle.updateOne({ "title": dbArticle.title }, //Find with the unique identifier
+                {
+                    title: dbArticle.title,
+                    link: dbArticle.link
+                },
+                { upsert: true }
+            )
+                .then(function (result) {
+                    // View the added result in the console
+                    console.log(result);
+                })
+                .catch(function (err) {
+                    // If an error occurred, log it
+                    console.log(err);
+                });
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            console.log(err);
+        });
+    res.send("Article Saved");
+});
+
 // Route for getting all Articles from the db
 router.get("/api/articles", function (req, res) {
     db.Article.find({})
         .then(function (dbArticle) {
             // If we were able to successfully find Articles, send them back to the client
-            res.json(dbArticle);
-        })
-        .catch(function (err) {
-            // If an error occurred, send it to the client
-            res.json(err);
-        });
-});
-
-// Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", function (req, res) {
-    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-    db.Article.findOne({ _id: req.params.id })
-        .then(function (dbArticle) {
-
-            // save article to SavedArticles collection
-
-
-
-            // If we were able to successfully find an Article with the given id, send it back to the client
             res.json(dbArticle);
         })
         .catch(function (err) {
