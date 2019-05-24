@@ -118,6 +118,19 @@ const deleteSavedStory = function (event) {
 $clearBtn.on("click", clearSaved);
 $(document).on("click", ".delete-btn", deleteSavedStory);
 
+
+// add this to other modal calls, grab note data to populate noteText
+const showModal = function () {
+    const data = $(this).attr("data-id");
+    console.log(data);
+    $("#noteModal").modal("show");
+    $("#noteText").val(data);
+};
+
+$("#modal-test").on("click", showModal);
+
+
+
 // on load
 $(document).ready(
     API.getSavedArticles()

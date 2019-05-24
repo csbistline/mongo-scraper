@@ -50,7 +50,7 @@
 
         </div>
     </div>
-
+<button id="modal-test" data-id="foo">Test modal</button>
 </div>
 
 {{!-- Modal --}}
@@ -67,7 +67,7 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="noteText">Add your note here</label>
+                        <label for="noteText">Add or edit your note here</label>
                         <textarea class="form-control" id="noteText" rows="3"></textarea>
                     </div>
                 </form>
@@ -79,6 +79,32 @@
         </div>
     </div>
 </div>
+
+
+
+
+{{!-- test modal --}}
+<div id="myModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- My Custom JS -->
 <script src="/assets/js/saved.js"></script>
