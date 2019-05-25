@@ -1,18 +1,16 @@
+// ==========================
+// JQUERY SETUP
+// ==========================
+
 // Get references to page elements
 var $scrapeResults = $("#scrape-results");
 var $scrapeBtn = $("#scrape-btn");
 var $clearBtn = $("#clear-btn");
 
-// delay promise workaround for displaying results
-const delayPromise = function (duration) {
-    return function () {
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                resolve();
-            }, duration);
-        });
-    };
-};
+
+// ==========================
+// API
+// ==========================
 
 // The API object contains methods for each kind of request we'll make
 const API = {
@@ -45,11 +43,25 @@ const API = {
     }
 };
 
+// ==========================
+// FUNCTIONS
+// ==========================
+
+// delay promise workaround for displaying results
+const delayPromise = function (duration) {
+    return function () {
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                resolve();
+            }, duration);
+        });
+    };
+};
+
 // function that scrapes site, then calls displayScrapped
 const scrapeSite = function (event) {
     event.preventDefault();
 
-    // something going on here that it won't refresh the articles ...
     return API.scrapeDB()
 
         // wait 500ms to let articles store in db
@@ -91,12 +103,20 @@ const displayScraped = function (result) {
             .attr("data-toggle", "modal")
             .attr("data-target", ".saved-modal-sm");
         $span.append($btn).append($link);
-        $title.append($span);
 
+        let $row = $("<div>")
+            .addClass("row");
+        let $col1 = $("<div>")
+            .addClass("col-sm-6");
+        let $col2 = $("<div>")
+            .addClass("col-sm-6");
+
+        $col2.append($span);
+        $col1.append($title);
+        $row.append($col1).append($col2);
         $p
-            .append($title)
+            .append($row)
             .append("<hr>");
-
         return $p;
     });
 
@@ -126,7 +146,11 @@ const saveStory = function (event) {
         });
 };
 
-// Add event listeners to buttons
+// ==========================
+// EVENT LISTENERS
+// ==========================
+
+// buttons
 $scrapeBtn.on("click", scrapeSite);
 $clearBtn.on("click", clearScraped);
 $(document).on("click", ".save-btn", saveStory);

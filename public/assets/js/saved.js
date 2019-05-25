@@ -1,17 +1,15 @@
-// Get references to page elements
-var $savedResults = $("#saved-results");
-var $clearBtn = $("#clear-btn");
+// ==========================
+// jQuery setup
+// ==========================
 
-// delay promise workaround for displaying results
-const delayPromise = function (duration) {
-    return function () {
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                resolve();
-            }, duration);
-        });
-    };
-};
+// Get references to page elements
+const $savedResults = $("#saved-results");
+const $clearBtn = $("#clear-btn");
+const $saveNoteBtn = $("#save-note");
+
+// ==========================
+// API setup
+// ==========================
 
 // The API object contains methods for each kind of request we'll make
 const API = {
@@ -41,9 +39,67 @@ const API = {
             url: "/api/saved/clear/" + id,
             type: "DELETE"
         });
+    },
+
+    createNote: function (id, note) {
+        return $.ajax({
+            method: "POST",
+            url: "/api/notes/" + id,
+            data: {
+                body: note
+            }
+        });
     }
 };
 
+
+
+// When you click the savenote button
+$(document).on("click", "#savenote", function () {
+    // Grab the id associated with the article from the submit button
+    var thisId = $(this).attr("data-id");
+
+    // Run a POST request to change the note, using what's entered in the inputs
+    $.ajax({
+        method: "POST",
+        url: "/articles/" + thisId,
+        data: {
+            // Value taken from title input
+            title: $("#titleinput").val(),
+            // Value taken from note textarea
+            body: $("#bodyinput").val()
+        }
+    })
+        // With that done
+        .then(function (data) {
+            // Log the response
+            console.log(data);
+            // Empty the notes section
+            $("#notes").empty();
+        });
+
+    // Also, remove the values entered in the input and textarea for note entry
+    $("#titleinput").val("");
+    $("#bodyinput").val("");
+});
+
+
+// ==========================
+// FUNCTIONS
+// ==========================
+
+// delay promise workaround for displaying results
+const delayPromise = function (duration) {
+    return function () {
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                resolve();
+            }, duration);
+        });
+    };
+};
+
+// SAVED STORIES
 
 // renders articles on page from savedarticles DB
 const displaySaved = function (result) {
@@ -73,14 +129,23 @@ const displaySaved = function (result) {
             .text("Add note")
             .addClass("badge badge-secondary note-btn mr-2 float-right")
             .attr("href", "#")
-            .attr("data-id", article._id)
-            .attr("data-toggle", "modal")
-            .attr("data-target", ".note-modal");
+            .attr("data-id", article._id);
+        // .attr("data-toggle", "modal")
+        // .attr("data-target", ".note-modal");
         $span.append($delete).append($read).append($note);
-        $title.append($span);
 
+        let $row = $("<div>")
+            .addClass("row");
+        let $col1 = $("<div>")
+            .addClass("col-sm-6");
+        let $col2 = $("<div>")
+            .addClass("col-sm-6");
+
+        $col2.append($span);
+        $col1.append($title);
+        $row.append($col1).append($col2);
         $p
-            .append($title)
+            .append($row)
             .append("<hr>");
 
         return $p;
@@ -90,6 +155,7 @@ const displaySaved = function (result) {
     $savedResults.empty();
     $savedResults.append($articles);
 };
+
 
 // delete all scraped articles from DB
 const clearSaved = function (event) {
@@ -101,6 +167,7 @@ const clearSaved = function (event) {
         });
 };
 
+// delete one saved story from DB
 const deleteSavedStory = function (event) {
     event.preventDefault();
     const id = $(this).attr("data-id");
@@ -114,9 +181,52 @@ const deleteSavedStory = function (event) {
         });
 };
 
-// Add event listeners to buttons
+// NOTES
+
+// add this to other modal calls, grab note data to populate noteText
+const showModal = function () {
+    const $id = $(this).attr("data-id");
+    console.log($id);
+    $("#noteModal").modal("show");
+    $("#noteText").attr("data-id", $id);
+    API.getOneSavedArticle($id)
+        .then(function (data) {
+            console.log(data);
+            if (data.note) {
+                $("#noteText").val(data.note.body);
+            }
+        });
+
+};
+
+const saveNote = function () {
+    // grab note value
+    const $note = $("#noteText").val().trim();
+    const $id = $("#noteText").attr("data-id");
+    console.log($id, $note);
+
+    API.createNote($id, $note)
+        .then(function (response) {
+            // Log the response
+            console.log(response);
+            // Empty the notes section
+            $("#noteModal").modal("hide");
+        });
+
+    // Also, remove the values entered in the input and textarea for note entry
+    $("#noteText").val("");
+};
+
+// ==========================
+// EVENT LISTENERS
+// ==========================
+
+// buttons
 $clearBtn.on("click", clearSaved);
+$saveNoteBtn.on("click", saveNote);
 $(document).on("click", ".delete-btn", deleteSavedStory);
+$(document).on("click", ".note-btn", showModal);
+
 
 // on load
 $(document).ready(
