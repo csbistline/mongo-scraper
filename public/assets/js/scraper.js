@@ -122,7 +122,7 @@ const displayScraped = function (result) {
 
     // clear results area and display
     $scrapeResults.empty();
-    $scrapeResults.append($articles);
+    $scrapeResults.prepend($articles);
 };
 
 // delete all scraped articles from DB

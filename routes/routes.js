@@ -218,7 +218,7 @@ router.get("/api/saved/:id", function (req, res) {
         // ..and populate all of the notes associated with it
         .populate("note")
         .then(function (dbArticle) {
-            // If we were able to successfully find an Article with the given id, send it back to the client
+            // If we were ablnoe to successfully find an Article with the given id, send it back to the client
             res.json(dbArticle);
         })
         .catch(function (err) {
